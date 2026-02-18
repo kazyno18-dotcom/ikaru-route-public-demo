@@ -1,0 +1,466 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* IkaruRoute カラーパレット */
+  --color-primary: #1a3a6b;
+  --color-primary-light: #2f5fa8;
+  --color-accent: #00b4d8;
+  --color-bg: #0f1923;
+  --color-surface: #1a2535;
+  --color-surface-2: #243044;
+  --color-border: #2d3f5a;
+  --color-text: #e8edf5;
+  --color-text-muted: #8a9bb5;
+
+  /* サービス種別カラー */
+  --color-shintai: #3498DB;
+  --color-kaji: #27AE60;
+  --color-seikatsu: #8E44AD;
+  --color-judo: #E74C3C;
+  --color-shogai: #E67E22;
+  --color-two-staff: #F39C12;
+  --color-accompany: #95A5A6;
+
+  /* 進捗バーカラー */
+  --color-progress-danger: #E74C3C;
+  --color-progress-warning: #F39C12;
+  --color-progress-good: #27AE60;
+  --color-progress-over: #8E44AD;
+
+  /* ブレークポイント変数 */
+  --bp-mobile: 430px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  /* iOSのフォントサイズ自動調整を無効化 */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Noto Sans JP', 'Inter', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  overflow-x: hidden;
+  /* iOSのバウンススクロール */
+  overscroll-behavior: none;
+}
+
+/* スクロールバーカスタマイズ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ガントチャートスタイル */
+.gantt-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  /* iOSのモメンタムスクロール */
+  -webkit-overflow-scrolling: touch;
+}
+
+.gantt-grid {
+  display: grid;
+  min-width: max-content;
+}
+
+.gantt-time-slot {
+  height: 32px;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+}
+
+.gantt-time-slot.hour-mark {
+  border-bottom: 2px solid var(--color-primary-light);
+}
+
+/* 訪問ブロック */
+.visit-block {
+  position: absolute;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: grab;
+  transition: all 0.15s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* タッチ操作 */
+  touch-action: none;
+}
+
+.visit-block:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+}
+
+.visit-block:active {
+  cursor: grabbing;
+}
+
+.visit-block.service-shintai {
+  background: rgba(52, 152, 219, 0.85);
+  border-left: 3px solid #3498DB;
+  color: white;
+}
+
+.visit-block.service-kaji {
+  background: rgba(39, 174, 96, 0.85);
+  border-left: 3px solid #27AE60;
+  color: white;
+}
+
+.visit-block.service-seikatsu {
+  background: rgba(142, 68, 173, 0.85);
+  border-left: 3px solid #8E44AD;
+  color: white;
+}
+
+.visit-block.service-judo {
+  background: rgba(231, 76, 60, 0.85);
+  border-left: 3px solid #E74C3C;
+  color: white;
+}
+
+.visit-block.service-shogai {
+  background: rgba(230, 126, 34, 0.85);
+  border-left: 3px solid #E67E22;
+  color: white;
+}
+
+.visit-block.two-staff {
+  border: 2px solid #F39C12;
+  box-shadow: 0 0 0 1px #F39C12, 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.visit-block.accompany {
+  border: 2px dashed #95A5A6;
+}
+
+/* スタッフ稼働インジケーター */
+.staff-indicator {
+  height: 4px;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* 進捗バー */
+.progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  transition: width 0.5s ease, background-color 0.3s ease;
+}
+
+/* アラートバナー */
+.alert-banner {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* トースト通知 */
+.toast {
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 売上カード */
+.revenue-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.revenue-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ドロップゾーン */
+.drop-zone-active {
+  background: rgba(0, 180, 216, 0.1);
+  border: 2px dashed var(--color-accent);
+}
+
+/* グラスモーフィズム */
+.glass {
+  background: rgba(26, 37, 53, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ボタンスタイル */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* タッチ操作の最小サイズ */
+  min-height: 44px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 180, 216, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* タッチ操作の最小サイズ */
+  min-height: 44px;
+}
+
+.btn-secondary:hover {
+  background: var(--color-border);
+}
+
+.btn-secondary:active {
+  opacity: 0.8;
+}
+
+/* モーダル */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ボトムシート（モバイル用） */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-radius: 16px 16px 0 0;
+  z-index: 50;
+  animation: slideUp 0.3s ease;
+  max-height: 60vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  margin: 12px auto 8px;
+}
+
+/* ============================================
+   レスポンシブ ユーティリティ
+   ============================================ */
+
+/* モバイル専用表示 */
+.mobile-only {
+  display: none;
+}
+
+/* デスクトップ専用表示 */
+.desktop-only {
+  display: block;
+}
+
+/* ============================================
+   iPad (768px〜1023px)
+   ============================================ */
+@media (max-width: 1023px) {
+  .tablet-hide {
+    display: none !important;
+  }
+
+  .tablet-full-width {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: unset !important;
+  }
+
+  /* ツールバーをコンパクトに */
+  .toolbar-compact .toolbar-label {
+    display: none;
+  }
+}
+
+/* ============================================
+   iPhone / スマートフォン (〜767px)
+   ============================================ */
+@media (max-width: 767px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-hide {
+    display: none !important;
+  }
+
+  /* ボタンのタッチターゲット拡大 */
+  .btn-primary,
+  .btn-secondary {
+    min-height: 48px;
+    font-size: 15px;
+  }
+
+  /* モーダルをフルスクリーンに近く */
+  .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 92vh !important;
+    border-radius: 16px 16px 0 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    margin: 0 !important;
+    animation: slideUp 0.3s ease !important;
+  }
+
+  /* グラスモーフィズムのblurを軽量化（パフォーマンス） */
+  .glass {
+    backdrop-filter: blur(8px);
+  }
+
+  /* スクロールバーを非表示（モバイルは不要） */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 入力フィールドのズーム防止（iOS: 16px以上でズームしない） */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ============================================
+   iPhone SE / 小型端末 (〜374px)
+   ============================================ */
+@media (max-width: 374px) {
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 10px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   Safe Area (iPhone X以降のノッチ対応)
+   ============================================ */
+@supports (padding: max(0px)) {
+  .safe-area-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .safe-area-top {
+    padding-top: max(0px, env(safe-area-inset-top));
+  }
+}
