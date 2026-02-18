@@ -3,9 +3,10 @@ runtime: python311
 build:
   commands:
     build:
-      - pip install -r backend/requirements.txt
+      - ls -la backend
+      - cd backend && pip install -r requirements.txt
 run:
-  command: python backend/seed.py && uvicorn backend.app.main:app --host 0.0.0.0 --port 8080
+  command: python3 backend/seed.py && uvicorn backend.app.main:app --host 0.0.0.0 --port 8080
   network:
     port: 8080
   env:
