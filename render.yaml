@@ -1,0 +1,27 @@
+services:
+  # バックエンドAPI（FastAPI）
+  - type: web
+    name: ikaruRoute-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ikaruRoute-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://ikaru-route.vercel.app
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 480
+
+databases:
+  # PostgreSQL（Render無料プラン）
+  - name: ikaruRoute-db
+    databaseName: ikaruRoute
+    user: ikaruRoute_user
+    plan: free

@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+*.env
+
+# SQLite (ローカル開発用のみ)
+backend/*.db
+backend/ikaruRoute.db
+
+# Node.js
+node_modules/
+.npm
+.yarn/
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# 環境変数（秘密情報）
+.env
+.env.local
+.env.production
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Vercel
+.vercel
