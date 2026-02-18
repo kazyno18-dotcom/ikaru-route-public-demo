@@ -8,7 +8,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: ikaruRoute-db
+          name: ikaruroute-db
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
@@ -21,7 +21,7 @@ services:
 
 databases:
   # PostgreSQL（Render無料プラン）
-  - name: ikaruRoute-db
-    databaseName: ikaruRoute
-    user: ikaruRoute_user
+  - name: ikaruroute-db
+    databaseName: ikaruroute
+    user: ikaruroute_user
     plan: free
