@@ -15,8 +15,8 @@ env/
 *.env
 
 # SQLite (ローカル開発用のみ)
-backend/*.db
-backend/ikaruRoute.db
+backend/# *.db
+# backend/ikaruRoute.db
 
 # Node.js
 node_modules/
