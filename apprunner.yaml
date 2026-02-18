@@ -5,7 +5,7 @@ build:
     build:
       - pip install -r backend/requirements.txt
 run:
-  command: uvicorn backend.app.main:app --host 0.0.0.0 --port 8080
+  command: python backend/seed.py && uvicorn backend.app.main:app --host 0.0.0.0 --port 8080
   network:
     port: 8080
     env:
