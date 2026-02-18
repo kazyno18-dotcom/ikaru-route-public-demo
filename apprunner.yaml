@@ -1,0 +1,15 @@
+version: 1.0
+runtime: python3
+build:
+  commands:
+    build:
+      - pip install -r backend/requirements.txt
+run:
+  command: uvicorn backend.app.main:app --host 0.0.0.0 --port 8080
+  network:
+    port: 8080
+    env:
+      SECRET_KEY: "dev_secret_key_for_aws_demo"
+      ALGORITHM: "HS256"
+      ACCESS_TOKEN_EXPIRE_MINUTES: "1440"
+      # CORS: 後でVercelのURLを設定するが、一旦全許可に近い形でも動くように backend/main.py は * 許可設定済み
